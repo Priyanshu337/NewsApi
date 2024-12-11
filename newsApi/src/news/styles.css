@@ -1,0 +1,46 @@
+.tab {
+    display: flex;
+    flex-direction: row;
+    height: 150px;
+    width: 1000px;
+}
+
+.img_Container {
+    width: 150px;
+    height: 150px;
+}
+
+.other_Container {
+    width: auto;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.newsHead {
+    display: flex;
+    margin-left: 25px;
+    padding: none;
+    font-size: 14px;
+}
+
+.newsdescription {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 25px;
+
+}
+
+.newsTitle {
+    display: flex;
+    margin-left: 25px;
+    color: orange;
+}
+
+.newsCategory {
+    display: flex;
+    flex-direction: row;
+    margin-left: 25px;
+
+}
