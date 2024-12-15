@@ -2,19 +2,32 @@ const articleModel = require('../Model/articleModel');
 
 const addArticle = async (req, res) => {
     try {
-        const { name, title, content } = req.body;
+        const { name, title, content, imageURL, votes, CATEGORY, sentiment } = req.body;
+
+        const generateKeywords = (title, content) => {
+            const words = `${title} ${content}`.replace(/[^\w\s]/g, '').split(/\s+/);
+            const uniqueKeywords = Array.from(new Set(words));
+            return uniqueKeywords.slice(0, 10);
+        };
+
+        const keywords = generateKeywords(title, content);
+
         const newArticle = new articleModel({
-            id: Math.random().toString,
             name,
             title,
             content,
+            imageURL,
+            votes,
+            CATEGORY,
+            sentiment,
+            keywords,
+
         });
-        console.log(newArticle);
+        // here i need to create  a function to create a keyword and then store thgat as well in db 
         const savedArticle = await newArticle.save();
         res.status(201).json(savedArticle);
-        console.log(savedArticle, "This is the article that is get in  backend ");
     } catch (error) {
-        console.error('Error creating article:', error.message);
+        console.error('Error creating article in controller file:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
@@ -22,9 +35,7 @@ const addArticle = async (req, res) => {
 const articleById = async (req, res) => {
     try {
         const articleId = req.params.articleId;
-        console.log('apihit');
         const article = await articleModel.findById(articleId);
-        console.log(article, "article by id");
         if (article) {
             res.send(article);
         }
@@ -40,7 +51,6 @@ const articleById = async (req, res) => {
 
 const listArticle = async (req, res) => {
     try {
-        // const paramsId = req.params.article_id.articleId;
         const article = await articleModel.find();
         if (article.length > 0) {
             res.json(article);
@@ -53,8 +63,40 @@ const listArticle = async (req, res) => {
     }
 }
 
-module.exports = { addArticle, listArticle, articleById };
+const upVotes = async (req, res) => {
+    try {
+        console.log('called')
 
-// we will crech show all article as well 
-// i need to figure out how to add image on db 
+        const { articleId } = req.params;
+        console.log(articleId, "THis is the article id i got ");
+        const article = await articleModel.findById(articleId);
+        if (article) {
+            await articleModel.findByIdAndUpdate(articleId, {
+                $inc: { upvotes: 1 },
+            });
+            res.json("SUCCESS")
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+const search = async (req, res) => {
+    const searchQuery = req.query.q;
+
+    if (!searchQuery) {
+        console.log("Cannot find search query");
+    }
+    try {
+        const results = await articleModel.find({
+            keywords: { $regex: searchQuery, $options: 'i' }
+        });
+        console.log(results)
+        res.json(results);
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+module.exports = { addArticle, listArticle, articleById, upVotes, search };
 

@@ -1,11 +1,9 @@
 .sidebar {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    flex-direction: row;
+    justify-content: space-evenly;
     border: 2px solid black;
     border-radius: 20px;
-    width: 250px;
-    height: 600px;
 }
 
 .button {

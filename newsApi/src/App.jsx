@@ -14,10 +14,11 @@ function App() {
   return (
     <div className='app'>
       <NewsApi>
+        <div className='sidebar-wrapper'>
+          <Sidebar />
+        </div>
         <div className='main-wrapper'>
-          <div className='sidebar-wrapper'>
-            <Sidebar />
-          </div>
+
           <div className='routes-wrapper'>
             <Routes>
               <Route path="/newsArticle" element={<NewsMain />} />

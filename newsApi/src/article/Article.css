@@ -1,0 +1,145 @@
+.articleContainer {
+    display: flex;
+    width: 2000px;
+    justify-content: space-around;
+}
+
+
+.articleListMain {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-evenly;
+}
+
+articlelistContainer {
+    width: 800px;
+    height: 600px;
+    justify-items: center;
+    border: 2px solid black;
+    border-radius: 20px;
+    margin: 8px;
+    padding: 8px;
+
+}
+
+.articleList {
+    border: 1px solid grey;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+
+}
+
+.articlelist-content {
+    margin-left: 20px;
+    margin: 10px;
+    width: 600px;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+}
+
+.articleLabel {
+    margin: 5px;
+    border-bottom: 0.5px solid grey;
+}
+
+.searchWrapper {
+    height: 50%;
+
+}
+
+.search-wrapper {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.results-container {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.results-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.results-container li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.results-container li:hover {
+    background-color: #e0e0e0;
+}
+
+
+.articleLabel {
+    font-size: 18px;
+    color: #333;
+    text-decoration: none;
+}
+
+.articleLabel:hover {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+/* display article css */
+
+
+.imageContent {
+    height: 500px;
+    width: 300px;
+}
+
+.articleContent {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.article_title {
+    display: flex;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+.article_name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.votes_sentiment {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 750px;
+    justify-content: space-between;
+}
+
+.votes_sentiment p {
+    margin: 0px;
+}
+
+.votes_sentiment button {
+    margin: 0px;
+}
