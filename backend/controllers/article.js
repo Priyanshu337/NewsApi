@@ -23,7 +23,6 @@ const addArticle = async (req, res) => {
             keywords,
 
         });
-        // here i need to create  a function to create a keyword and then store thgat as well in db 
         const savedArticle = await newArticle.save();
         res.status(201).json(savedArticle);
     } catch (error) {
@@ -37,7 +36,8 @@ const articleById = async (req, res) => {
         const articleId = req.params.articleId;
         const article = await articleModel.findById(articleId);
         if (article) {
-            res.send(article);
+            console.log(article, "article by id in be")
+            res.json(article);
         }
         else {
             res.status(404).json({ error: "no article found" });
@@ -68,11 +68,26 @@ const upVotes = async (req, res) => {
         console.log('called')
 
         const { articleId } = req.params;
-        console.log(articleId, "THis is the article id i got ");
         const article = await articleModel.findById(articleId);
         if (article) {
             await articleModel.findByIdAndUpdate(articleId, {
-                $inc: { upvotes: 1 },
+                $inc: { votes: 1 },
+            });
+            res.json("SUCCESS")
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+const downVote = async (req, res) => {
+    try {
+
+        const { articleId } = req.params;
+        const article = await articleModel.findById(articleId);
+        if (article) {
+            await articleModel.findByIdAndUpdate(articleId, {
+                $inc: { votes: -1 },
             });
             res.json("SUCCESS")
         }
@@ -98,5 +113,5 @@ const search = async (req, res) => {
     }
 };
 
-module.exports = { addArticle, listArticle, articleById, upVotes, search };
+module.exports = { addArticle, listArticle, articleById, upVotes, downVote, search };
 
