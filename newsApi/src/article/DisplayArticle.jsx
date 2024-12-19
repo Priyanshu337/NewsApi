@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './Article.css';
+import Searchbar from '../component/searchbar';
+import { useContext } from 'react';
+import { newsContext } from '../contextApi/newsApi';
 
 function DisplayArticle() {
+    const { fetchArticleByID, fetchArticle, paragraphs, upVote, downVote, loadArticle } = useContext(newsContext);
+
     const { articleId } = useParams();
-    const [loadArticle, setLoadArticle] = useState({});
+
 
     const formatDateToNormal = (dateString) => {
         if (!dateString) return "Unknown Date";
@@ -16,77 +21,87 @@ function DisplayArticle() {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
+        const loadData = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/articleId/${articleId}`);
-                const data = await response.json();
-                setLoadArticle(data);
+                const data = await fetchArticleByID(articleId);
+                console.log(data)
             } catch (err) {
-                console.error('Error fetching article:', err);
+                console.error(err);
             }
         };
-        fetchData();
-    }, [articleId]);
+        loadData();
+    }, [articleId, fetchArticle]);
 
-
-    const upVotes = async () => {
+    const handleUpVote = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/article/${articleId}/upVotes`, {
-                method: 'POST',
-            });
-
-            const data = await response.json();
-
-            console.log('Upvote successful:', data);
-
+            await upVote(articleId);
+            console.log("Upvoted!");
         } catch (err) {
-            console.log(err);
+            console.error("Error upvoting:", err);
         }
     };
 
-
-    if (!Object.keys(loadArticle).length) {
-        return <p>Loading article...</p>;
-    }
+    const handleDownVote = async () => {
+        try {
+            await downVote(articleId);
+            console.log("Downvoted!");
+        } catch (err) {
+            console.error("Error downvoting:", err);
+        }
+    };
 
     return (
         <div className="article_main">
-            <div className="imageContent">
-                {/* Placeholder for any image */}
-                <img style={{ width: '500px', height: '450px' }} src={loadArticle.imageURL} alt="Article" />
-            </div>
-            <div className="articleContent">
+            <div className='header-wrapper'>
                 <div className="article_title">
                     <h2>{loadArticle.title}</h2>
                 </div>
+
                 <div className="article_name">
-                    <div>
-                        <label> By <b>{loadArticle.name}</b></label>
+                    <div className='articlename-wrapper'>
+                        <label>{loadArticle.name}</label>
+                        <b>|</b>
+                        <p><b>Created on:  </b>{formatDateToNormal(loadArticle.CreatedAt)}</p>
                     </div>
-                    |
-                    <div>
-                        <p>{formatDateToNormal(loadArticle.CreatedAt)}</p>
-                    </div>
-                </div>
-                <div className="article_content">
-                    <p>{loadArticle.content}</p>
                 </div>
 
-                <div>
-                    <p>Published At: {formatDateToNormal(loadArticle.PublishedAt)}</p>
-                </div>
-                <div className='votes_sentiment'>
-                    <div>
-                        <p >Votes:{loadArticle.votes}</p>
-                        <div>
-                            <button onClick={upVotes}>Up</button>
-                            {/* <button onClick={downVote}>Down</button> */}
-                        </div>
-                    </div>
-                    <p>Sentiment: {loadArticle.sentiment}</p>
-
+            </div>
+            <div className='image-wrapper '>
+                <div className="imageContent">
+                    <img style={{ width: '650px', height: '550px' }} src={loadArticle.imageURL} alt="Article" />
                 </div>
             </div>
+            <div className='article-data'>
+                <div className="articleContent">
+                    <div className="article_content">
+                        {paragraphs?.map((para, index) => (
+                            <p className='para' key={index}>{para}</p>
+                        ))}
+                    </div>
+                    <div className='category-container'>
+                        <b>Categories:</b>
+                        <div className='category'>
+                            {loadArticle.CATEGORY?.map(({ category }) => {
+                                return <label className='categoryLabel'> {category}</label>
+                            })}
+                        </div>
+
+                    </div>
+                    <div className='votes_sentiment'>
+                        <div>
+                            <p >Votes:{loadArticle.votes}</p>
+                            <div>
+                                <button onClick={handleUpVote}>UpVote</button>
+                                <button onClick={handleDownVote}>DownVote</button>
+                            </div>
+                        </div>
+                        <p><b>Sentiment:</b> {loadArticle.sentiment}</p>
+                    </div>
+                </div>
+                <div className='suggestion-wrapper'>
+                    <Searchbar />
+                </div>
+            </div >
         </div>
     );
 }

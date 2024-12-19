@@ -18,7 +18,6 @@ function App() {
           <Sidebar />
         </div>
         <div className='main-wrapper'>
-
           <div className='routes-wrapper'>
             <Routes>
               <Route path="/newsArticle" element={<NewsMain />} />

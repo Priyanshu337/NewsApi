@@ -46,18 +46,19 @@
 
 .app {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: auto;
+  width: 100vw;
+  background-color: rgb(229 231 235);
+
 }
 
 .main-wrapper {
-
   display: flex;
   width: 1500px;
   height: auto;
-  margin: 5px;
+  margin-top: 15px;
   justify-content: space-around;
 }
 
@@ -67,15 +68,16 @@
   height: auto;
   display: flex;
   justify-content: center;
-  margin-top: 60px;
-  background-color: white;
+  margin-top: 30px;
+  background-color: transparent;
 }
 
 
 .sidebar-wrapper {
-  position: fixed;
-  top: 2px;
-  height: 80px;
-  width: 900px;
+  /* height: 80px; */
+  width: 100vw;
+  background-color: #1A237E;
+  border-radius: 20px;
+
   /* left: 20px; */
 }

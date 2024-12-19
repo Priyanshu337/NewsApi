@@ -1,83 +1,62 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import './Article.css'
+import Searchbar from "../component/searchbar";
+import { useContext } from 'react';
+import { newsContext } from '../contextApi/newsApi';
 
 function ArticleList() {
-    const [articles, setArticles] = useState([]);
-    const [search, setSearch] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
+    const { articles, fetchArticle } = useContext(newsContext);
 
     useEffect(() => {
-        const fetchArticles = async () => {
+        const loadData = async () => {
             try {
-                const response = await fetch("http://localhost:8080/api/listArticle/");
-                const data = await response.json();
-                setArticles(data);
+                const data = await fetchArticle();
+                console.log(data)
             } catch (err) {
-                console.error("Error fetching articles:", err);
-                setError("Failed to fetch articles. Please try again later.");
+                console.error(err);
             }
         };
-        fetchArticles();
+        loadData();
     }, []);
-
-    useEffect(() => {
-        if (search.trim() === "") {
-            setSearchResults([]); // Clear results if search is empty
-            return;
-        }
-
-        const searchData = async () => {
-            try {
-                const response = await fetch(
-                    `http://localhost:8080/api/article/search?q=${search}`
-                );
-                const data = await response.json();
-                setSearchResults(data);
-            } catch (err) {
-                console.error("Error searching articles:", err);
-                setError("Failed to fetch search results. Please try again later.");
-            }
-        };
-
-        const debounceTimer = setTimeout(searchData, 300);
-        return () => clearTimeout(debounceTimer);
-    }, [search]);
 
     return (
         <div className="articleContainer">
             <div className="articleListMain">
                 <div className="articlelistContainer">
-                    <label>Articles</label>
                     <div className="articleList">
-                        {articles.map((article) => (
-                            <div key={article._id} className="articlelist-content">
-                                <Link to={`/dispArticle/${article._id}`}>
-                                    <label className="articleLabel">{article.title}</label>
-                                </Link>
-                            </div>
-                        ))}
+                        {articles.map((article) => {
+                            const maxLength = 130; // Set your desired maximum length
+                            const content = article.content.length > maxLength
+                                ? article.content.substring(0, maxLength) + '...'
+                                : article.content;
+
+                            return (
+                                <div key={article._id} className="articlelist-content">
+                                    <Link to={`/dispArticle/${article._id}`}>
+                                        <div className="eachArticle">
+                                            <div className="articleImage">
+                                                <img className="imageContainer" src={article.imageURL} alt={article.title} />
+                                            </div>
+                                            <div className="articleDetails">
+                                                <div>
+                                                    <div className="articlediv">{article.title}</div>
+                                                    <label className="articleLabel">{content}</label>
+                                                </div>
+                                                <div className="article-footer">
+                                                    <p>By:{article.name}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
-            <div className="searchWrapper">
-                <input
-                    type="text"
-                    className="search-wrapper"
-                    placeholder="Search for articles"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
 
-                <div className="results-container">
-                    <ul className="ul-wrapper">
-                        {searchResults.map((result) => (
-                            <li key={result._id}>{result.title}</li>
-                        ))}
-                    </ul>
-
-                </div>
-            </div>
+            <Searchbar />
         </div>
 
     );
