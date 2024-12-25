@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './addArticle.css';
 import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs
+import { newsContext } from '../contextApi/newsApi';
 
 function AddArticle() {
+
+    const { postData } = useContext(newsContext);
+    const [date, setDate] = useState();
+
     const [name, setName] = useState('');
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -31,22 +36,30 @@ function AddArticle() {
         setCategories([...categories, { id: uuidv4(), category: '' }]);
     };
 
-    const postData = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/api/postArticle', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(params),
-            });
-            const ans = await response.json();
-            console.log(ans);
-        } catch (err) {
-            console.log(err);
-        }
+    const removeCategory = (index) => {
+        setCategories(prevArray => prevArray.splice(index, 1));
     };
+
+    const currentDate = () => {
+        const date = new Date();
+        const day = date.getDate();
+        const month = date.toLocaleString('default', { month: 'long' });
+        const year = date.getFullYear();
+        return `${day} ${month} ${year}`;
+    }
+
+
+    const btnClick = async () => {
+        try {
+            const response = await postData(params);
+            const data = await response.json();
+            console.log(data);
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
 
     return (
         <div className="add-article-container">
@@ -117,33 +130,51 @@ function AddArticle() {
                     </div>
 
                 </div>
-                <button className="submit-btn" onClick={postData}>
+                <button className="submit-btn" onClick={btnClick}>
                     Add Article
                 </button>
             </div>
 
+
+
             {/* Right Section for Preview */}
             <div className="preview-section">
-                <h2>Preview</h2>
+                <h2>Preview of your article </h2>
                 <div className="preview-article">
-                    <h1 className="preview-title">{name || "Article Name"}</h1>
-                    <h2 className="preview-heading">{title || "Article Title"}</h2>
-                    <p className="preview-content">
-                        {content || "The content of your article will appear here..."}
-                    </p>
-                    {categories.length > 0 && (
-                        <div className="preview-categories">
-                            <strong>Categories:</strong>
-                            <ul>
-                                {categories.map((category) => (
-                                    <li key={category.id}>{category.category || "Unnamed Category"}</li>
-                                ))}
-                            </ul>
+                    <div className='article-heading'>
+                        <h2>{title}</h2>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                        <div className='article-name'>
+                            <label>{name}</label>|
+                            <label><b>Created at: </b>{currentDate()}</label>
                         </div>
-                    )}
+                    </div>
+                    <div>
+                        <div>
+                            <img style={{ width: '650px', height: '550px' }} src={imageURL} alt="Article" />
+                        </div>
+                    </div>
+                    <div className='article-content'>
+                        <div className='content'>
+                            <label>{content}</label>
+
+                            {categories.length > 0 && (
+                                <div className="preview-categories">
+                                    <strong>Categories:</strong>
+                                    <ul>
+                                        {categories.map((category) => (
+                                            <li className='category-list' key={category.id}>{category.category}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

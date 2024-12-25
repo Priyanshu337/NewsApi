@@ -4,15 +4,16 @@ import './Article.css'
 import Searchbar from "../component/searchbar";
 import { useContext } from 'react';
 import { newsContext } from '../contextApi/newsApi';
+import Loader from "../component/Loader";
 
 function ArticleList() {
-    const { articles, fetchArticle } = useContext(newsContext);
+    const { articles, fetchArticle, loading } = useContext(newsContext);
 
     useEffect(() => {
         const loadData = async () => {
             try {
                 const data = await fetchArticle();
-                console.log(data)
+                // console.log(data)
             } catch (err) {
                 console.error(err);
             }
@@ -23,37 +24,38 @@ function ArticleList() {
     return (
         <div className="articleContainer">
             <div className="articleListMain">
-                <div className="articlelistContainer">
-                    <div className="articleList">
-                        {articles.map((article) => {
-                            const maxLength = 130; // Set your desired maximum length
-                            const content = article.content.length > maxLength
-                                ? article.content.substring(0, maxLength) + '...'
-                                : article.content;
+                {loading ? (<div className="loader_wrapper"><Loader /></div>) :
+                    <div className="articlelistContainer">
+                        <div className="articleList">
+                            {articles.map((article) => {
+                                const maxLength = 130; // Set your desired maximum length
+                                const content = article.content.length > maxLength
+                                    ? article.content.substring(0, maxLength) + '...'
+                                    : article.content;
 
-                            return (
-                                <div key={article._id} className="articlelist-content">
-                                    <Link to={`/dispArticle/${article._id}`}>
-                                        <div className="eachArticle">
-                                            <div className="articleImage">
-                                                <img className="imageContainer" src={article.imageURL} alt={article.title} />
-                                            </div>
-                                            <div className="articleDetails">
-                                                <div>
-                                                    <div className="articlediv">{article.title}</div>
-                                                    <label className="articleLabel">{content}</label>
+                                return (
+                                    <div key={article._id} className="articlelist-content">
+                                        <Link to={`/dispArticle/${article._id}`}>
+                                            <div className="eachArticle">
+                                                <div className="articleImage">
+                                                    <img className="imageContainer" src={article.imageURL} alt={article.title} />
                                                 </div>
-                                                <div className="article-footer">
-                                                    <p>By:{article.name}</p>
+                                                <div className="articleDetails">
+                                                    <div>
+                                                        <div className="articlediv">{article.title}</div>
+                                                        <label className="articleLabel">{content}</label>
+                                                    </div>
+                                                    <div className="article-footer">
+                                                        <p>By:{article.name}</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
+                                        </Link>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>}
             </div>
 
             <Searchbar />

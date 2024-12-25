@@ -4,12 +4,12 @@ import './Article.css';
 import Searchbar from '../component/searchbar';
 import { useContext } from 'react';
 import { newsContext } from '../contextApi/newsApi';
+import Loader from '../component/Loader';
 
 function DisplayArticle() {
-    const { fetchArticleByID, fetchArticle, paragraphs, upVote, downVote, loadArticle } = useContext(newsContext);
-
+    const { fetchArticleByID, fetchArticle, paragraphs, upVotes, downVotes, loadArticle, setLoadArticle, loading } = useContext(newsContext);
     const { articleId } = useParams();
-
+    console.log(loadArticle.sentiment)
 
     const formatDateToNormal = (dateString) => {
         if (!dateString) return "Unknown Date";
@@ -24,17 +24,20 @@ function DisplayArticle() {
         const loadData = async () => {
             try {
                 const data = await fetchArticleByID(articleId);
-                console.log(data)
+                // console.log(data)
             } catch (err) {
                 console.error(err);
             }
         };
         loadData();
-    }, [articleId, fetchArticle]);
+    }, [articleId]);
 
     const handleUpVote = async () => {
         try {
-            await upVote(articleId);
+            console.log('upvote called')
+            const updatedArticle = await upVotes(articleId);
+            setLoadArticle(updatedArticle); // Update state with the new data
+
             console.log("Upvoted!");
         } catch (err) {
             console.error("Error upvoting:", err);
@@ -43,12 +46,22 @@ function DisplayArticle() {
 
     const handleDownVote = async () => {
         try {
-            await downVote(articleId);
+            const updatedArticle = await downVotes(articleId);
+            setLoadArticle(updatedArticle); // Update state with the new data
+
             console.log("Downvoted!");
         } catch (err) {
             console.error("Error downvoting:", err);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="loader_wrapper">
+                <Loader />
+            </div>
+        );
+    }
 
     return (
         <div className="article_main">
@@ -85,25 +98,36 @@ function DisplayArticle() {
                                 return <label className='categoryLabel'> {category}</label>
                             })}
                         </div>
-
                     </div>
                     <div className='votes_sentiment'>
-                        <div>
-                            <p >Votes:{loadArticle.votes}</p>
-                            <div>
-                                <button onClick={handleUpVote}>UpVote</button>
-                                <button onClick={handleDownVote}>DownVote</button>
-                            </div>
+                        <div className='vote'>
+                            <button onClick={handleUpVote}>⬆︎</button>
+                            <p >{loadArticle.votes}</p>
+                            <button onClick={handleDownVote}>⬇︎</button>
+
+
                         </div>
-                        <p><b>Sentiment:</b> {loadArticle.sentiment}</p>
+                        <div>
+                            <b>Sentiment:</b>
+                            <p style={{
+                                backgroundColor: loadArticle.sentiment?.trim().toLowerCase() === 'positive' ? 'green' : 'red',
+                                color: 'white',
+                                border: '1px solid black',
+                                borderRadius: '20px'
+                            }}>{loadArticle.sentiment}</p>
+                        </div>
                     </div>
                 </div>
                 <div className='suggestion-wrapper'>
-                    <Searchbar />
+                    {/* <Searchbar /> */}
                 </div>
             </div >
-        </div>
+        </div >
     );
 }
 
 export default DisplayArticle;
+
+
+
+

@@ -1,21 +1,37 @@
 .articleContainer {
     display: flex;
-    width: 1000px;
-    justify-content: space-between;
+    width: 100vw;
+    justify-content: space-around;
     background-color: transparent;
     padding: 10px;
+    height: calc(100vh - 150px);
 }
 
 
 .articleListMain {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 55%;
     width: 600px;
     justify-content: space-evenly;
     background-color: transparent;
     border-radius: 15px;
 }
+
+.loader_wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+}
+
+
 
 articlelistContainer {
     width: 800px;
@@ -24,6 +40,7 @@ articlelistContainer {
     border-radius: 20px;
     margin: 8px;
     padding: 8px;
+    overflow-y: auto;
 
 }
 
@@ -32,7 +49,7 @@ articlelistContainer {
     display: flex;
     flex-direction: column;
     margin: 10px;
-
+    overflow-y: auto;
 }
 
 .articlelist-content {
@@ -99,57 +116,96 @@ articlelistContainer {
     color: grey;
 }
 
-.searchWrapper {
-    height: 550px;
-    width: 250px;
-    background-color: transparent;
+.li-link {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    margin: 4px;
+}
+
+.link {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 15px;
+    justify-content: center;
+    height: 100%;
 
+}
+
+.searchWrapper {
+    width: 440px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 25px;
+    padding: 10px;
+    border-radius: 25px;
+    border: 0.5px solid black;
+    background-color: white;
 }
 
 .search-wrapper {
-    width: 200px;
+    width: 420px;
+    height: 20px;
     padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    background-color: white;
+    border: none;
 }
 
-.results-container {
-    margin-top: 10px;
-    width: 200px;
-    overflow-y: auto;
-    border-radius: 5px;
-    padding: 2px;
-    background-color: transparent;
+.link-div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 70%;
 }
 
-.results-container ul {
+.search-wrap {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.label-name {
+    color: black;
+    border-bottom: 0.5px solid black;
+}
+
+.label-title {
+    color: black;
+    border-bottom: 0.5px solid black;
+
+}
+
+.label-content {
+    color: black;
+    text-align: left;
+    display: block;
+    word-wrap: break-word;
+}
+
+.ul-wrapper {
     list-style: none;
     width: 100%;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
 }
 
-.results-container li {
-    padding: 3px 0;
-    margin: 20px;
-    border: 2px solid black;
+.ul-wrapper li {
+    padding: 3px;
+    width: 400px;
+    height: 80px;
+    border: 0.5px solid black;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 10px;
+    color: black;
     transition: background-color 0.3s;
-}
-
-.results-container li:hover {
-    background-color: #e0e0e0;
-}
-
-.articleLabel:hover {
-    color: #007bff;
-    text-decoration: underline;
 }
 
 /* display article css */
@@ -159,7 +215,6 @@ articlelistContainer {
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    justify-content: space-between;
 }
 
 .header-wrapper {
@@ -224,7 +279,7 @@ articlelistContainer {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 730px;
+    width: 700px;
     padding: 10px;
 }
 
@@ -259,12 +314,27 @@ articlelistContainer {
     border: 1px solid black;
 }
 
+.vote {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 250px;
+    height: 50px;
+    border: 2px solid black;
+    border-radius: 20px;
+}
+
+.votesbtn {
+    margin: 10px;
+}
+
 .votes_sentiment {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 650px;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .votes_sentiment p {
