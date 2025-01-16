@@ -1,3 +1,7 @@
+.newsMain {
+    height: calc(100vh - 150px);
+}
+
 .tab {
     display: flex;
     flex-direction: row;

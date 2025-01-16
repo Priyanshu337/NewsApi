@@ -7,9 +7,6 @@ const router = require('./routes/index.js');
 
 
 const app = express();
-
-
-// ({ origin: 'http://localhost:3000' }); to set it to specified origin of client
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -28,4 +25,3 @@ app.use(router);
 
 
 
-// we need to set the proxy to frontend to 8080

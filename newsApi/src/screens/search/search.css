@@ -1,0 +1,73 @@
+.search_main {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 150px);
+    width: 80vw;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(51, 188, 234);
+}
+
+.search-wrap {
+    height: auto;
+    width: 40vw;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 0.7px solid black;
+    border-radius: 30px;
+}
+
+.searchbar-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 680px;
+    justify-content: space-between;
+}
+
+.search_input {
+    outline: none;
+    border: none;
+    height: 5vh;
+    width: 35vw;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    margin-left: 10px;
+    font-size: medium;
+    font-weight: 400;
+    border-radius: 30px;
+}
+
+.list {
+    padding: 5px;
+    width: 30vw;
+    text-align: left;
+}
+
+.list label {
+    color: grey;
+    font-size: 18px;
+
+}
+
+.primary-container {
+    margin-top: 50px;
+}
+
+.secondary-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 20vw;
+
+}
+
+.searchArticle {
+    box-shadow: 8px 5px 4px grey;
+    outline: none;
+}

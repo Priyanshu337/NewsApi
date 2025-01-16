@@ -36,7 +36,6 @@ const articleById = async (req, res) => {
         const articleId = req.params.articleId;
         const article = await articleModel.findById(articleId);
         if (article) {
-            console.log(article, "article by id in be")
             res.json(article);
         }
         else {
@@ -65,36 +64,100 @@ const listArticle = async (req, res) => {
 
 const upVotes = async (req, res) => {
     try {
-        console.log('called')
-
         const { articleId } = req.params;
-        const article = await articleModel.findById(articleId);
-        if (article) {
-            await articleModel.findByIdAndUpdate(articleId, {
-                $inc: { votes: 1 },
-            });
-            res.json("SUCCESS")
-        }
-    } catch (err) {
-        console.log(err);
-    }
-}
+        const userId = req.body;
 
-const downVote = async (req, res) => {
+        console.log(userId.userId, "From upvote");
+
+        const article = await articleModel.findById(articleId);
+
+        if (article) {
+            const upvoteIds = article.upvoteIds;
+            const downvoteIds = article.downvoteIds;
+
+            if (upvoteIds.includes(userId.userId)) {
+                return res.status(200).json({
+                    message: "User can only upvote once",
+                    article,
+                });
+            }
+
+            if (downvoteIds.includes(userId.userId)) {
+                console.log(userId.userId, "Userid from upvote controller");
+                article.downvoteIds = downvoteIds.filter((id) => id !== userId.userId);
+                article.upvoteIds.push(userId.userId);
+                article.votes += 2;
+                await article.save();
+                return res.status(200).json({
+                    message: "Upvote successful, removed from downvote list",
+                    article,
+                });
+            } else {
+                article.upvoteIds.push(userId.userId);
+                article.votes += 1;
+                await article.save();
+                return res.status(200).json({
+                    message: "Upvote successful",
+                    article,
+                });
+            }
+        } else {
+            return res.status(404).json({ message: "Article not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal Server Error", error });
+    }
+};
+
+const downVotes = async (req, res) => {
     try {
-
         const { articleId } = req.params;
+        const userId = req.body;
+
+        console.log(userId.userId, "UserId in BE at downvote");
+
         const article = await articleModel.findById(articleId);
+        console.log(article, "API hit");
+
         if (article) {
-            await articleModel.findByIdAndUpdate(articleId, {
-                $inc: { votes: -1 },
-            });
-            res.json("SUCCESS")
+            const upvoteIds = article.upvoteIds;
+            const downvoteIds = article.downvoteIds;
+
+            if (downvoteIds.includes(userId.userId)) {
+                return res.status(200).json({
+                    message: "User can only downvote once",
+                    article,
+                });
+            }
+
+            if (upvoteIds.includes(userId.userId)) {
+                console.log(userId.userId, "UserId from downvote controller");
+                article.upvoteIds = upvoteIds.filter((id) => id !== userId.userId);
+                article.downvoteIds.push(userId.userId);
+                article.votes -= 2;
+                await article.save();
+                return res.status(200).json({
+                    message: "Downvote successful, removed from upvote list",
+                    article,
+                });
+            } else {
+                article.downvoteIds.push(userId.userId);
+                article.votes -= 1;
+                await article.save();
+                return res.status(200).json({
+                    message: "Downvote successful",
+                    article,
+                });
+            }
+        } else {
+            return res.status(404).json({ message: "Article not found" });
         }
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal Server Error", error });
     }
-}
+};
 
 const search = async (req, res) => {
     const searchQuery = req.query.q;
@@ -113,5 +176,5 @@ const search = async (req, res) => {
     }
 };
 
-module.exports = { addArticle, listArticle, articleById, upVotes, downVote, search };
+module.exports = { addArticle, listArticle, articleById, upVotes, downVotes, search };
 

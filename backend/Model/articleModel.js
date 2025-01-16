@@ -30,6 +30,12 @@ const articleSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    upvoteIds: {
+        type: [String]
+    },
+    downvoteIds: {
+        type: [String]
+    },
     STATUS: {
         type: 'Boolean',
         default: true

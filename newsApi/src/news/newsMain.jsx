@@ -18,7 +18,7 @@ function NewsMain() {
 
     if (newsData.length > 0) {
         return (
-            <div className='main'>
+            <div className='newsMain'>
                 <h2>Latest News on Crypto Currencies</h2>
                 {newsData.map((news, i) => (
                     <React.Fragment key={i}>
